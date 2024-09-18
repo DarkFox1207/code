@@ -2,17 +2,24 @@ package main
 
 import "fmt"
 
+func calculate(a, b float64) (float64, float64, float64) {
+	s1 := a + b
+	s2 := a - b
+	s3 := b - a
+	return s1, s2, s3
+}
+
 func main() {
-
 	var a, b float64
-
 	fmt.Print("Введите первое число: ")
-	fmt.Scanln(&a) //Запрос на ввод данных от пользователя
+	fmt.Scan(&a)
 	fmt.Print("Введите второе число: ")
-	fmt.Scanln(&b)
+	fmt.Scan(&b)
 
-	fmt.Println("Сумма =", a+b)
-	fmt.Println("Разность a из b =", a-b)
-	fmt.Println("Разность b из a=", b-a)
+	//Вызов функции и присвоение значений от вычислений
+	s1, s2, s3 := calculate(a, b)
+	fmt.Printf("Сумма = %.2f\n", s1)
+	fmt.Printf("Разность a - b = %.2f\n", s2)
+	fmt.Printf("Разность b - a = %.2f\n", s3)
 
 }
