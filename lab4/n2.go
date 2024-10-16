@@ -20,7 +20,7 @@ func avgAge(people map[string]int) float64 {
 func main() {
 	// Пример карты с именами и возрастами людей
 	people := map[string]int{
-		"Алена":     25,
+		"Алена":     250,
 		"Борис":     30,
 		"Владислав": 35,
 		"Генадий":   20,
