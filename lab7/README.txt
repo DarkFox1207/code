@@ -28,34 +28,25 @@
 •Клиенты должны подключаться к серверу, отправлять и получать сообщения.
 •Сервер должен поддерживать несколько клиентов и рассылать им сообщения, отправленные любым подключённым клиентом.
 
-ЗАПУСК:
+Запуск:
+Скачать папку, открыть Visual Studio Code, ПКМ по папке с файлами и нажать открыть консоль, ввести команду go run названиефайла.go
+Перед тем как запустить файл клиента нужно запустить файл сервера!
 
 
-
-
-
-GET-запрос:
+GET-запросы:
 
 curl http://localhost:8080/hello
 curl http://localhost:8080/goodbye
 
 
-
 POST-запрос:
 
-# Заголовки запроса
 $headers = @{
     "Content-Type" = "application/json"
 }
-
-# Данные запроса в формате JSON
 $data = @{
     "key" = "value"
     "message" = "Hello, server!"
 } | ConvertTo-Json
-
-# Выполнение POST-запроса
 $response = Invoke-WebRequest -Uri "http://localhost:8080/data" -Method Post -Headers $headers -Body $data
-
-# Вывод ответа сервера
 $response.Content
