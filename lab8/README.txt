@@ -26,3 +26,28 @@
 
 Запуск:
 Скачать папку, открыть Visual Studio Code, ПКМ по папке с файлами и нажать открыть консоль, ввести команду go run названиефайла.go
+
+///////Маршруты
+Первая команда для командной строки, вторая для VSCode
+
+1. Все пользователи (можно указать номер страницы и ограничение на кол-во вывода на странице)
+curl -X GET http://localhost:8080/users
+& "C:\Windows\System32\curl.exe" -X GET http://localhost:8080/users
+& "C:\Windows\System32\curl.exe" -X GET "http://localhost:8080/users?page=2&limit=10"
+
+
+2. Получить информацию о пользователе по его ID (вместо 1 писать id пользователя)
+curl -X GET http://localhost:8080/users/1
+& "C:\Windows\System32\curl.exe" -X GET http://localhost:8080/users/1
+
+3. Создать нового пользователя (Все данные полей можно заменить на свои)
+curl -X POST http://localhost:8080/users -H "Content-Type: application/json" -d "{\"fname\": \"Михаил\", \"sname\": \"Зубенко\", \"age\": 30, \"email\": \"mikhailzubenko@example.com\"}"
+& "C:\Windows\System32\curl.exe" -X POST http://localhost:8080/users -H "Content-Type: application/json" -d '{\"fname\": \"Михаил\", \"sname\": \"Зубенко\", \"age\": 30, \"email\": \"mikhailzubenko@example.com\"}'
+
+4. Обновить информацию пользователя по id (вместо 1 пишется id пользователя)
+curl -X PUT http://localhost:8080/users/1 -H "Content-Type: application/json" -d "{\"fname\": \"Алексей\", \"sname\": \"Алексеев\", \"age\": 31, \"email\": \"alexeyalexeev@example.com\"}"
+& "C:\Windows\System32\curl.exe" -X PUT http://localhost:8080/users/1 -H "Content-Type: application/json" -d '{\"fname\": \"Алексей\", \"sname\": \"Алексеев\", \"age\": 31, \"email\": \"alexeyalexeev@example.com\"}'
+
+5. Удалить пользователя по id (вместо 1 пишется id пользователя)
+curl -X DELETE http://localhost:8080/users/1
+& "C:\Windows\System32\curl.exe" -X DELETE http://localhost:8080/users/1
