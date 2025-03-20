@@ -81,6 +81,12 @@ public class GuessingGame extends JFrame {
         higherButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (guess >= max) {
+                    cheating = true;
+                    JOptionPane.showMessageDialog(null, "Вы жульничаете! Давайте сыграем еще раз.");
+                    resetGame();
+                    return;
+                }
                 min = guess + 1;
                 makeGuess();
             }
@@ -89,6 +95,12 @@ public class GuessingGame extends JFrame {
         lowerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (guess <= min) {
+                    cheating = true;
+                    JOptionPane.showMessageDialog(null, "Вы жульничаете! Давайте сыграем еще раз.");
+                    resetGame();
+                    return;
+                }
                 max = guess - 1;
                 makeGuess();
             }
