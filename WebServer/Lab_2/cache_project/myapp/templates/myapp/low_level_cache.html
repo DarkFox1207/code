@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Low Level Cache</title>
+</head>
+<body>
+    <h1>Низкоуровневое представление</h1>
+    <p>Время генерации: {{ data }}</p>
+
+    {% load cache %}
+    {% cache 300 fragment_cache using="custom_cache" %}  <!-- Используем кэш 'custom_cache' -->
+    <p>Этот фрагмент кэширован: {{ data }}</p>
+    {% endcache %}
+</body>
+</html>

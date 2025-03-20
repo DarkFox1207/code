@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список статей</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Статьи</h1>
+        <a href="{% url 'article_create' %}" class="btn btn-success mb-3">Добавить статью</a>
+        <ul class="list-group">
+            {% for article in articles %}
+                <li class="list-group-item">
+                    <h2>{{ article.title }}</h2>
+                    <p>{{ article.content }}</p>
+                    <p><em>Опубликовано: {{ article.pub_date }}</em></p>
+                    <a href="{% url 'article_edit' article.pk %}" class="btn btn-primary">Редактировать</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>

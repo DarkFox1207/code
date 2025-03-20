@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Практическое задание 2</title>
+</head>
+<body>
+    <p>Нажмите кнопку для замены текста страницы.</p>
+    <h6 id="textToReplace">Этот текст будет заменен на текущую дату.</h6>
+    <button onclick="replaceTextWithDate()">Заменить текст</button>
+
+    <script>
+        function replaceTextWithDate() {
+            let date_ = new Date();
+            let formattedDate = date_.toLocaleDateString(); // Например, "12.10.2023"
+            document.getElementById("textToReplace").innerText = formattedDate;
+        }
+    </script>
+</body>
+</html>

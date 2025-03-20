@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задание 3</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 20%;
+            height: 50px;
+        }
+        td {
+            border: 2px solid black;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Автомобили</h1>
+
+    <!-- Двухуровневый список -->
+    <h2>Категории автомобилей</h2>
+    <ul>
+        <li>Легковые автомобили
+            <ul>
+                <li>Седаны</li>
+                <li>Хэтчбеки</li>
+                <li>Универсалы</li>
+            </ul>
+        </li>
+        <li>Грузовые автомобили
+            <ul>
+                <li>Пикапы</li>
+                <li>Фургоны</li>
+                <li>Самосвалы</li>
+            </ul>
+        </li>
+    </ul>
+
+    <!-- Первая таблица -->
+    <h2>Таблица 1</h2>
+    <table>
+        <tr>
+            <td rowspan="2">Номер</td>
+            <td colspan="2">Теги</td>
+        </tr>
+        <tr>
+            <td>Тег</td>
+            <td>Значение</td>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>p</td>
+            <td rowspan="4">для текста</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>a</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>b</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>i</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>table</td>
+            <td>таблица</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>tr</td>
+            <td>ряд таблицы</td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>td</td>
+            <td rowspan="2">ячейки таблицы</td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>th</td>
+        </tr>
+    </table>
+
+    <!-- Вторая таблица -->
+    <h2>Таблица 2</h2>
+    <table>
+        <tr>
+            <td rowspan="3"></td>
+            <td></td>
+            <td rowspan="3"></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td  colspan="2"></td>
+            <td></td>
+        </tr>
+    </table>
+</body>
+</html>

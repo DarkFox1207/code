@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Вариант 6</title>
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 500px;
+                height: 100px;
+            }
+            td {
+                border: 5px double black;
+                width: 50px;
+                height: 50px;
+            }
+        </style>
+    </head>
+    
+    <body bgcolor="#66CC99" text="#333333" link="#0066CC" vlink="#9933CC" alink="#FF6600">
+
+        <p>Пример абзаца для тега p</p>
+        <p>/Текст разбит на 2 абзаца с отступом между ними/</p>
+        Пример переноса текста с помощью тега br<br>
+        /Текст находится на 2 строках но без отступа между ними/
+        <div>
+            Div это блок который выделяется на новую строку
+            <span>
+                Span это элемент в котором текст остается на той же строке
+            </span>
+        </div>
+        <hr>
+        <b><h1>Заголовок 1 уровня жирный</h1></b>
+        <i><h2>Заголовок 2 уровня курсив</h2></i>
+        <u><h3>Заголовок 3 уровня подчеркнут</h3></u>
+        <h4>Заголовок 4 уровня</h4>
+        <h5>Заголовок 5 уровня</h5>
+        <h6>Заголовок 6 уровня</h6>
+        <pre>
+            Это пример
+            предформатированного текста
+               Здесь сохраняются
+            все пробелы и переходы на новую строку
+            </pre>
+        <img src="">
+        <a href="https://www.google.com">Перейти на сайт Google</a><br><br>
+        <a href="#block1">Перейти к заданию по вариантам</a><br><br>
+        <a href="mailto:example@example.com">Отправить письмо на example@example.com</a><br><br>
+
+        <h1 align="center" id="block1">Задание по варианту</h1>
+
+        <UL TYPE="circle"> 
+            <LI> Зима </LI> 
+            <LI> Весна </LI> 
+            <OL TYPE="A" start="24"> <!-- 24-я буква латинского алфавита — это X -->
+                <LI>Март</LI>
+                <LI>Апрель</LI>
+                <LI>Май</LI>
+            </OL>
+            <LI> Лето </LI> 
+            <LI> Осень </LI> 
+        </UL>
+
+        <table>
+                <tr>
+                    <td rowspan="3"></td><td></td><td></td><td></td><td></td>
+                    <td rowspan="3"></td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                </tr>
+                <tr>
+                    <td></td><td></td><td></td><td></td>
+                </tr>
+        </table>
+        <br>
+        <form method="POST">
+            <input type="text" id="1" placeholder=""><br><br><br>
+            <input type="radio" name="answer" value="option1"> Омск<br>
+            <input type="radio" name="answer" value="option1"> Новосибирск<br>
+            <input type="radio" name="answer" value="option1"> Томск<br><br><br>
+            <input type="password" id="3" placeholder=""><br><br><br>
+            <input type="file" id="4"><br><br><br>
+            <button type="reset">Сбросить</button>
+            <button type="submit">Отправить</button>
+        </form>
+
+    </body>
+

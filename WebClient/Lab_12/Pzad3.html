@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Практическое задание 3</title>
+</head>
+<body>
+    <h2>Информация о квартире</h2>
+    <button onclick="showApartmentInfo()">Показать информацию о квартире</button>
+    <div id="output"></div>
+
+    <script>
+        // Создаем объект Квартира
+        const apartment = {
+            address: "ул. Ленина, д. 10, кв. 5",
+            rooms: 3,
+            price: 5000000,
+            renovation: "евроремонт"
+        };
+
+        // Функция для вывода информации о квартире
+        function showApartmentInfo() {
+            // Формируем строку с информацией
+            const info = `
+                <p><strong>Адрес:</strong> ${apartment.address}</p>
+                <p><strong>Количество комнат:</strong> ${apartment.rooms}</p>
+                <p><strong>Цена:</strong> ${apartment.price} руб.</p>
+                <p><strong>Ремонт:</strong> ${apartment.renovation}</p>
+            `;
+
+            // Выводим информацию в блок с id="output"
+            document.getElementById("output").innerHTML = info;
+        }
+    </script>
+</body>
+</html>

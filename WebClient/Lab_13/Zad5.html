@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Анкета студента</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Анкета студента</h1>
+    <form action="#" method="post">
+        <!-- Имя -->
+        <label for="name">Имя:</label>
+        <input type="text" id="name" name="name" placeholder="Введите ваше имя" required>
+
+        <!-- Пол -->
+        <label>Пол:</label>
+        <label>
+            <input type="radio" name="gender" value="male" required> Мужской
+        </label>
+        <label>
+            <input type="radio" name="gender" value="female" required> Женский
+        </label>
+
+        <!-- Образование -->
+        <label for="education">Образование:</label>
+        <select id="education" name="education" required>
+            <option value="" disabled selected>Выберите уровень образования</option>
+            <option value="school">Среднее или ниже</option>
+            <option value="college">Среднее специальное</option>
+            <option value="university">Высшее</option>
+        </select>
+
+        <!-- Языки программирования -->
+        <label>Какие языки программирования Вы знаете:</label>
+        <label>
+            <input type="checkbox" name="languages" value="PHP"> PHP
+        </label>
+        <label>
+            <input type="checkbox" name="languages" value="C++"> C++
+        </label>
+        <label>
+            <input type="checkbox" name="languages" value="Java"> Java
+        </label>
+
+        <!-- Дата рождения -->
+        <label for="birthdate">Дата рождения:</label>
+        <input type="date" id="birthdate" name="birthdate" required>
+
+        <!-- Email -->
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email" placeholder="Введите ваш email" required>
+
+        <!-- Комментарий -->
+        <label for="comment">Ваш комментарий:</label>
+        <textarea id="comment" name="comment" rows="4" placeholder="Введите ваш комментарий"></textarea>
+
+        <!-- Кнопка отправки -->
+        <button type="submit">Отправить</button>
+    </form>
+</body>
+</html>
