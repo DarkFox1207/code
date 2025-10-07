@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Лабораторная работа 9</title>
+</head>
+<body>
+  <h1>Вариант 15</h1>
+  <form name="Test">
+    <label>Введите строку: 
+      <input type="text" name="In1">
+    </label>
+    <br><br>
+    <label>Результат: 
+      <input type="text" name="Result" readonly>
+    </label>
+    <br><br>
+    <input type="button" value="Enter"
+           onclick="document.Test.Result.value = checkDigits(document.Test.In1.value)">
+  </form>
+
+  <script>
+    // Функция проверяет, содержит ли строка только цифры
+    function checkDigits(str) {
+      // Регулярное выражение: ^\d+$ означает "только цифры от начала до конца"
+      return /^\d+$/.test(str);
+    }
+  </script>
+</body>
+</html>

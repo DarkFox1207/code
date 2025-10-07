@@ -1,0 +1,37 @@
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>Лабораторная работа 1</title>
+<script>
+  // Вводим числа a, b, c
+  var a = parseFloat(prompt("Введите число a:"));
+  var b = parseFloat(prompt("Введите число b:"));
+  var c = parseFloat(prompt("Введите число c:"));
+
+  if (isNaN(a) || isNaN(b) || isNaN(c)) {
+    alert("Ошибка: нужно ввести три действительных числа!");
+  } else {
+    // Проверка условия a ≥ b ≥ c
+    if (a >= b && b >= c) {
+      a = a * 2;
+      b = b * 2;
+      c = c * 2;
+      alert("Условие выполнено: числа удвоены\n" + 
+            "a = " + a + ", b = " + b + ", c = " + c);
+    } else {
+      a = Math.abs(a);
+      b = Math.abs(b);
+      c = Math.abs(c);
+      alert("Условие не выполнено: числа заменены на модули\n" + 
+            "a = " + a + ", b = " + b + ", c = " + c);
+    }
+  }
+</script>
+</head>
+
+<body>
+    <p style="text-align: center;" onclick="location.reload(true);">
+        Нажмите здесь, чтобы попробовать снова
+    </p>
+</body>
+</html>

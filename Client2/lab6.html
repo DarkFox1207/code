@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Лабораторная работа 6</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  input { margin: 5px; }
+  table { border-collapse: collapse; margin-top: 15px; width: 500px; }
+  th, td { border: 1px solid #444; padding: 5px 10px; text-align: center; }
+  .timer { margin-top: 15px; font-weight: bold; color: darkred; }
+</style>
+</head>
+<body>
+
+<h2>Калькулятор стоимости товаров со скидкой</h2>
+
+<form id="calcForm">
+  <div>
+    <label>Название товара: <input type="text" name="product"></label>
+    <label>Цена: <input type="number" name="price" step="0.01"></label>
+    <label>Количество: <input type="number" name="qty"></label>
+    <button type="button" onclick="addProduct()">Добавить</button>
+  </div>
+</form>
+
+<label>Скидка (%): <input type="number" id="discount" value="10"></label>
+<button onclick="calculateTotal()">Рассчитать</button>
+
+<table id="resultTable">
+  <thead>
+    <tr>
+      <th>Товар</th>
+      <th>Цена за единицу</th>
+      <th>Количество</th>
+      <th>Стоимость</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<p id="total"></p>
+<p class="timer" id="timer"></p>
+
+<script>
+let products = [];
+let timeLeft = 30;
+let timerId;
+
+function addProduct() {
+  const form = document.forms['calcForm'];
+  const product = form.product.value;
+  const price = parseFloat(form.price.value);
+  const qty = parseInt(form.qty.value);
+
+  if (!product || isNaN(price) || isNaN(qty)) {
+    alert("Заполните все поля корректно!");
+    return;
+  }
+
+  products.push({product, price, qty});
+  form.reset();
+  showProducts();
+}
+
+function showProducts() {
+  const tbody = document.querySelector("#resultTable tbody");
+  tbody.innerHTML = "";
+  products.forEach(p => {
+    const row = `<tr>
+      <td>${p.product}</td>
+      <td>${p.price.toFixed(2)}</td>
+      <td>${p.qty}</td>
+      <td>${(p.price * p.qty).toFixed(2)}</td>
+    </tr>`;
+    tbody.innerHTML += row;
+  });
+}
+
+function calculateTotal() {
+  let discount = parseFloat(document.getElementById("discount").value) || 0;
+  let sum = products.reduce((acc, p) => acc + p.price * p.qty, 0);
+  let total = sum * (1 - discount / 100);
+
+  document.getElementById("total").innerText = 
+    `Итого без скидки: ${sum.toFixed(2)} руб. 
+     | Со скидкой ${discount}%: ${total.toFixed(2)} руб.`;
+}
+
+// Очистка товаров
+function clearProducts() {
+  products = [];
+  document.querySelector("#resultTable tbody").innerHTML = "";
+  document.getElementById("total").innerText = "";
+}
+
+// Запуск таймера на 30 секунд (циклически)
+function startTimer() {
+  let timerEl = document.getElementById("timer");
+
+  function tick() {
+    timerEl.textContent = `До очистки товаров осталось ${timeLeft} сек.`;
+    if (timeLeft > 0) {
+      timeLeft--;
+    } else {
+      clearProducts();
+      timeLeft = 30; // перезапуск
+    }
+  }
+
+  tick();
+  timerId = setInterval(tick, 1000);
+}
+
+window.onload = startTimer;
+</script>
+
+</body>
+</html>

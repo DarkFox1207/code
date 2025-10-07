@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Лабораторная работа 4</title>
+</head>
+<body>
+<script>
+  var ForumUser = {
+    username: "Guest",
+    email: "guest@example.com",
+    posts: 0,
+    rating: 0,
+    isActive: true,
+
+    // Метод для установки имени и почты
+    set(username, email) {
+      if (typeof username === "string" && username.trim() !== "") {
+        this.username = username.trim();
+      }
+      if (typeof email === "string" && email.includes("@")) {
+        this.email = email.trim();
+      }
+    },
+
+    // Метод для отображения информации
+    show() {
+      return "Пользователь: " + this.username +
+             "\nEmail: " + this.email +
+             "\nСообщений: " + this.posts +
+             "\nРейтинг: " + this.rating +
+             "\nСтатус: " + (this.isActive ? "Активен" : "Заблокирован");
+    },
+
+    // Добавить сообщение
+    addPost() {
+      if (this.isActive) {
+        this.posts++;
+      }
+    },
+
+    // Изменить рейтинг
+    changeRating(value) {
+      if (!isNaN(value)) {
+        this.rating += parseInt(value);
+      }
+    },
+
+    // Сделать неактивным
+    deactivate() {
+      this.isActive = false;
+    }
+  };
+
+  // Работа с объектом
+  console.log("Начальное состояние:\n" + ForumUser.show());
+
+  ForumUser.set("Pavel", "pavelpetrovivt34@gmail.com");
+  ForumUser.addPost();
+  ForumUser.addPost();
+  ForumUser.changeRating(10);
+
+  console.log("После активности:\n" + ForumUser.show());
+
+  ForumUser.deactivate();
+  ForumUser.addPost(); // сообщение не добавится
+  ForumUser.changeRating(-3);
+
+  console.log("После деактивации:\n" + ForumUser.show());
+</script>
+    <p>Результат в консоли (F12 → Console)</p>
+</body>
+</html>

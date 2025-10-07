@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Лабораторная работа 11</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    input, button { font-size: 16px; padding: 5px; margin: 5px; }
+    #result, #tests { margin-top: 20px; font-weight: bold; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <h2>Узнай первый день месяца</h2>
+
+  <label>Введите дату (ДД.ММ.ГГГГ): </label>
+  <input type="text" id="dateInput" placeholder="26.09.2025">
+  <button onclick="showFirstDay()">Показать первый день месяца</button>
+
+  <div id="result"></div>
+
+  <h3>Тесты</h3>
+  <div id="tests"></div>
+
+  <script>
+    const weekdays = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
+
+    // Метод для объекта Date
+    Date.prototype.firstDayOfMonth = function() {
+      let firstDay = new Date(this.getFullYear(), this.getMonth(), 1);
+      return weekdays[firstDay.getDay()];
+    };
+
+    // Функция для интерактивного ввода
+    function showFirstDay() {
+      const input = document.getElementById("dateInput").value;
+      const parts = input.split(".");
+      if (parts.length !== 3) {
+        document.getElementById("result").textContent = "Ошибка: используйте формат ДД.ММ.ГГГГ";
+        return;
+      }
+
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1;
+      const year = parseInt(parts[2], 10);
+
+      const date = new Date(year, month, day);
+      if (isNaN(date)) {
+        document.getElementById("result").textContent = "Ошибка: неверная дата";
+        return;
+      }
+
+      document.getElementById("result").textContent =
+        `Дата: ${date.toLocaleDateString()} → Первый день месяца: ${date.firstDayOfMonth()}`;
+    }
+
+    // --- Тесты из предыдущего варианта ---
+    const tests = [
+      new Date(2025, 8, 26), // Сентябрь 2025
+      new Date(2023, 0, 15), // Январь 2023
+      new Date(2024, 1, 10), // Февраль 2024 (високосный)
+      new Date(2022, 11, 31) // Декабрь 2022
+    ];
+
+    let testOutput = "";
+    tests.forEach(d => {
+      testOutput += `Дата: ${d.toLocaleDateString()} → Первый день месяца: ${d.firstDayOfMonth()}\n`;
+    });
+
+    document.getElementById("tests").textContent = testOutput;
+  </script>
+</body>
+</html>

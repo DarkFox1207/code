@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Задание 1</title>
+  <style>
+    .mosaic {
+      display: grid;
+      grid-template-columns: repeat(2, 200px);
+      gap: 10px;
+    }
+    .mosaic div {
+      text-align: center;
+    }
+    img {
+      max-width: 200px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Мозаика (Задание 1)</h1>
+
+  <div class="mosaic">
+    <div>
+      <img src="pic1.jpg" alt="pic1" onclick="openWindow('pic1.jpg')">
+      <p>pic1.jpg</p>
+    </div>
+    <div>
+      <img src="pic2.jpg" alt="pic2" onclick="openWindow('pic2.jpg')">
+      <p>pic2.jpg</p>
+    </div>
+    <div>
+      <img src="pic3.jpg" alt="pic3" onclick="openWindow('pic3.jpg')">
+      <p>pic3.jpg</p>
+    </div>
+    <div>
+      <img src="pic4.jpg" alt="pic4" onclick="openWindow('pic4.jpg')">
+      <p>pic4.jpg</p>
+    </div>
+  </div>
+
+  <script>
+    function openWindow(file) {
+      window.open(file, "_blank", "width=400,height=400");
+    }
+  </script>
+</body>
+</html>

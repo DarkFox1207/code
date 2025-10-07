@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Лабораторная работа 7</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; margin: 18px; color:#222; }
+    h1 { font-size:18px; margin-bottom:6px; }
+    .row { margin:8px 0; display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    input[type="number"], input[type="text"], select { padding:6px; font-size:14px; }
+    button { padding:6px 10px; font-size:14px; cursor:pointer; }
+    table { border-collapse: collapse; margin-top:12px; width:100%; max-width:900px; }
+    th, td { border:1px solid #ccc; padding:6px 8px; text-align:left; }
+    .result { margin-top:12px; padding:10px; background:#f6f9ff; border:1px solid #cfe; }
+    .small { font-size:13px; color:#555; }
+    .error { color:#b00; }
+    .history { max-height:220px; overflow:auto; border:1px solid #eee; padding:6px; background:#fff; }
+    .controls { display:flex; gap:8px; flex-wrap:wrap; }
+  </style>
+</head>
+<body>
+  <h1>Сервис работы с дробями (сокращение, округление, общий знаменатель и операции)</h1>
+  <p class="small">Ввод дробей: отдельные поля числителя/знаменателя или строкой (<code>-7/3</code> или <code>2 1/3</code>).</p>
+
+  <div>
+    <fieldset>
+      <legend>Дробь A</legend>
+      <div class="row">
+        <label>Ввод строкой: <input id="inputA_str" type="text" placeholder="напр. -7/3 или 2 1/3"></label>
+      </div>
+      <div class="row">
+        <label>Числитель: <input id="a_num" type="number" value="3"></label>
+        <label>Знаменатель: <input id="a_den" type="number" value="4"></label>
+      </div>
+    </fieldset>
+
+    <fieldset style="margin-top:10px">
+      <legend>Дробь B</legend>
+      <div class="row">
+        <label>Ввод строкой: <input id="inputB_str" type="text" placeholder="напр. 5/6"></label>
+      </div>
+      <div class="row">
+        <label>Числитель: <input id="b_num" type="number" value="5"></label>
+        <label>Знаменатель: <input id="b_den" type="number" value="6"></label>
+      </div>
+    </fieldset>
+
+    <div class="row controls" style="margin-top:10px">
+      <button id="btnParse">Применить ввод</button>
+      <select id="operation">
+        <option value="reduce">Сократить A</option>
+        <option value="reduceB">Сократить B</option>
+        <option value="toCommon">Привести к общему знаменателю</option>
+        <option value="add">A + B</option>
+        <option value="sub">A - B</option>
+        <option value="mul">A × B</option>
+        <option value="div">A ÷ B</option>
+        <option value="mixedA">A → смешанное</option>
+        <option value="mixedB">B → смешанное</option>
+        <option value="toDecimalA">A → десятичная</option>
+        <option value="toDecimalB">B → десятичная</option>
+      </select>
+      <label>Знаков после запятой: <input id="decimals" type="number" min="0" max="12" value="4" style="width:70px"></label>
+      <button id="btnCompute">Выполнить</button>
+      <button id="btnClear">Очистить историю</button>
+    </div>
+
+    <div id="msg" class="small error" style="margin-top:8px"></div>
+
+    <div class="result" id="resultArea">
+      <strong>Результат:</strong>
+      <div id="resultText" style="margin-top:8px">—</div>
+    </div>
+
+    <h3 style="margin-top:14px">История операций (сохраняется между сеансами)</h3>
+    <div class="history" id="history"></div>
+  </div>
+
+<script>
+
+// ---- Утилиты ----
+function gcd(a, b) {
+  a = Math.abs(a); b = Math.abs(b);
+  while (b) { let t = a % b; a = b; b = t; }
+  return a;
+}
+function lcm(a, b) {
+  if (a === 0 || b === 0) return 0;
+  return Math.abs(a / gcd(a, b) * b);
+}
+
+// ---- Fraction "класс" (фабрика) ----
+function Fraction(numer, denom) {
+  // внутренние представления целые числа
+  return {
+    n: numer,
+    d: denom
+  };
+}
+
+// Нормализация: приводим знаменатель > 0 и сокращаем
+function normalize(fr) {
+  if (!isFinite(fr.n) || !isFinite(fr.d)) throw new Error("Некорректная дробь");
+  if (fr.d === 0) throw new Error("Знаменатель не может быть 0");
+  // если знаменатель отрицательный — перенести знак в числитель
+  if (fr.d < 0) { fr.n = -fr.n; fr.d = -fr.d; }
+  // сократить
+  var g = gcd(fr.n, fr.d);
+  fr.n = fr.n / g;
+  fr.d = fr.d / g;
+  return fr;
+}
+
+// Парсинг строковых вводов: "a/b", "-3/4", "2 1/3", "5"
+function parseFraction(str) {
+  if (typeof str !== 'string') throw new Error("Ожидается строка");
+  str = str.trim();
+  if (str.length === 0) throw new Error("Пустая строка");
+  // смешанное число "2 1/3"
+  var mixedMatch = /^([+-]?\d+)\s+(\d+)\/(\d+)$/.exec(str);
+  if (mixedMatch) {
+    var whole = parseInt(mixedMatch[1],10);
+    var num = parseInt(mixedMatch[2],10);
+    var den = parseInt(mixedMatch[3],10);
+    if (den === 0) throw new Error("Знаменатель 0");
+    var sign = whole < 0 ? -1 : 1;
+    var absWhole = Math.abs(whole);
+    var totalNum = sign * (absWhole * den + num);
+    return normalize(Fraction(totalNum, den));
+  }
+  // обычная дробь a/b
+  var fracMatch = /^([+-]?\d+)\s*\/\s*([+-]?\d+)$/.exec(str);
+  if (fracMatch) {
+    var a = parseInt(fracMatch[1],10), b = parseInt(fracMatch[2],10);
+    if (b === 0) throw new Error("Знаменатель 0");
+    return normalize(Fraction(a,b));
+  }
+  // целое число
+  var intMatch = /^([+-]?\d+)$/.exec(str);
+  if (intMatch) {
+    return normalize(Fraction(parseInt(intMatch[1],10), 1));
+  }
+  throw new Error("Неподдерживаемый формат дроби");
+}
+
+// Форматирование дроби: "n/d" (сокращённая), или "0"
+function fracToString(fr) {
+  fr = normalize({n: fr.n, d: fr.d}); // копируем и нормализуем
+  if (fr.d === 1) return String(fr.n);
+  return fr.n + "/" + fr.d;
+}
+
+// Сложение/вычитание/умножение/деление
+function add(fr1, fr2) {
+  var n = fr1.n * fr2.d + fr2.n * fr1.d;
+  var d = fr1.d * fr2.d;
+  return normalize(Fraction(n,d));
+}
+function sub(fr1, fr2) {
+  var n = fr1.n * fr2.d - fr2.n * fr1.d;
+  var d = fr1.d * fr2.d;
+  return normalize(Fraction(n,d));
+}
+function mul(fr1, fr2) {
+  return normalize(Fraction(fr1.n * fr2.n, fr1.d * fr2.d));
+}
+function div(fr1, fr2) {
+  if (fr2.n === 0) throw new Error("Деление на ноль");
+  return normalize(Fraction(fr1.n * fr2.d, fr1.d * fr2.n));
+}
+
+// Приведение к общему знаменателю — возвращает [a', b'] где знаменатель общий
+function toCommonDenominator(fr1, fr2) {
+  var common = lcm(fr1.d, fr2.d);
+  var a_mult = common / fr1.d;
+  var b_mult = common / fr2.d;
+  var a2 = Fraction(fr1.n * a_mult, common);
+  var b2 = Fraction(fr2.n * b_mult, common);
+  return [normalize(a2), normalize(b2)];
+}
+
+// Преобразование в десятичную форму с округлением
+function toDecimal(fr, decimals) {
+  var val = fr.n / fr.d;
+  if (typeof decimals !== 'number' || decimals < 0) return String(val);
+  return val.toFixed(decimals);
+}
+
+// Преобразование в смешанное число: возвращает {whole, num, den}
+function toMixed(fr) {
+  var n = fr.n, d = fr.d;
+  var sign = n < 0 ? -1 : 1;
+  var absN = Math.abs(n);
+  var whole = Math.floor(absN / d);
+  var rem = absN % d;
+  return { whole: whole * sign, num: rem, den: d };
+}
+
+// ---- UI + localStorage history ----
+var el = {
+  inputA_str: document.getElementById('inputA_str'),
+  inputB_str: document.getElementById('inputB_str'),
+  a_num: document.getElementById('a_num'),
+  a_den: document.getElementById('a_den'),
+  b_num: document.getElementById('b_num'),
+  b_den: document.getElementById('b_den'),
+  btnParse: document.getElementById('btnParse'),
+  btnCompute: document.getElementById('btnCompute'),
+  btnClear: document.getElementById('btnClear'),
+  operation: document.getElementById('operation'),
+  decimals: document.getElementById('decimals'),
+  resultText: document.getElementById('resultText'),
+  msg: document.getElementById('msg'),
+  history: document.getElementById('history')
+};
+
+// Загрузить / сохранить историю
+var STORAGE_KEY = "fractions_service_history_v15";
+function loadHistory() {
+  try {
+    var s = localStorage.getItem(STORAGE_KEY);
+    if (!s) return [];
+    var arr = JSON.parse(s);
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) { return []; }
+}
+function saveHistory(arr) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); } catch (e) {}
+}
+function pushHistory(entry) {
+  var hist = loadHistory();
+  hist.unshift(entry); // добавляем в начало
+  if (hist.length > 50) hist = hist.slice(0,50);
+  saveHistory(hist);
+  renderHistory();
+}
+function renderHistory() {
+  var hist = loadHistory();
+  if (hist.length === 0) {
+    el.history.innerHTML = "<div class='small'>История пуста.</div>";
+    return;
+  }
+  el.history.innerHTML = hist.map(function(it) {
+    return "<div style='padding:6px;border-bottom:1px dashed #eee'><strong>" +
+      it.title + "</strong><div class='small' style='margin-top:4px;color:#333'>" +
+      it.detail + "</div><div class='small' style='color:#666;margin-top:4px'>" +
+      new Date(it.time).toLocaleString() + "</div></div>";
+  }).join('');
+}
+
+// Взять дробь из полей A (учитывается строковый ввод, если есть)
+function getFractionFromA() {
+  var s = el.inputA_str.value.trim();
+  if (s !== "") {
+    return parseFraction(s);
+  }
+  var n = parseInt(el.a_num.value,10);
+  var d = parseInt(el.a_den.value,10);
+  if (isNaN(n) || isNaN(d)) throw new Error("Поля дроби A некорректны");
+  return normalize(Fraction(n,d));
+}
+function getFractionFromB() {
+  var s = el.inputB_str.value.trim();
+  if (s !== "") {
+    return parseFraction(s);
+  }
+  var n = parseInt(el.b_num.value,10);
+  var d = parseInt(el.b_den.value,10);
+  if (isNaN(n) || isNaN(d)) throw new Error("Поля дроби B некорректны");
+  return normalize(Fraction(n,d));
+}
+
+// Обработчики
+el.btnParse.addEventListener('click', function() {
+  try {
+    el.msg.textContent = "";
+    var A = getFractionFromA();
+    var B = getFractionFromB();
+    // положим нормализованные значения обратно в поля
+    el.a_num.value = A.n; el.a_den.value = A.d; el.inputA_str.value = "";
+    el.b_num.value = B.n; el.b_den.value = B.d; el.inputB_str.value = "";
+    el.resultText.innerHTML = "<div>Дроби применены: A = <strong>" + fracToString(A) +
+                              "</strong>, B = <strong>" + fracToString(B) + "</strong></div>";
+  } catch (e) {
+    el.msg.textContent = e.message || String(e);
+  }
+});
+
+el.btnCompute.addEventListener('click', function() {
+  try {
+    el.msg.textContent = "";
+    var op = el.operation.value;
+    var decimals = parseInt(el.decimals.value,10);
+    if (isNaN(decimals) || decimals < 0) decimals = 4;
+
+    var A = getFractionFromA();
+    var B = getFractionFromB();
+    var outTitle = "";
+    var outDetail = "";
+
+    switch(op) {
+      case 'reduce':
+        outTitle = "Сокращение A";
+        outDetail = "A сокращён: " + fracToString(normalize({n:A.n,d:A.d}));
+        break;
+      case 'reduceB':
+        outTitle = "Сокращение B";
+        outDetail = "B сокращён: " + fracToString(normalize({n:B.n,d:B.d}));
+        break;
+      case 'toCommon':
+        outTitle = "Общий знаменатель";
+        var pair = toCommonDenominator(A,B);
+        outDetail = "A = " + fracToString(pair[0]) + ", B = " + fracToString(pair[1]) + " (знаменатель " + pair[0].d + ")";
+        break;
+      case 'add':
+        var r = add(A,B);
+        outTitle = "A + B";
+        outDetail = fracToString(A) + " + " + fracToString(B) + " = " + fracToString(r) + " = " + toDecimal(r, decimals) + " (окр. " + decimals + " знаков)";
+        break;
+      case 'sub':
+        var r = sub(A,B);
+        outTitle = "A - B";
+        outDetail = fracToString(A) + " - " + fracToString(B) + " = " + fracToString(r) + " = " + toDecimal(r, decimals);
+        break;
+      case 'mul':
+        var r = mul(A,B);
+        outTitle = "A × B";
+        outDetail = fracToString(A) + " × " + fracToString(B) + " = " + fracToString(r) + " = " + toDecimal(r, decimals);
+        break;
+      case 'div':
+        var r = div(A,B);
+        outTitle = "A ÷ B";
+        outDetail = fracToString(A) + " ÷ " + fracToString(B) + " = " + fracToString(r) + " = " + toDecimal(r, decimals);
+        break;
+      case 'mixedA':
+        var m = toMixed(A);
+        outTitle = "A → смешанное";
+        outDetail = fracToString(A) + " = " + (m.whole !== 0 ? (m.whole + (m.num ? " " : "")) : (m.whole === 0 && m.num === 0 ? "0" : "")) + (m.num ? m.num + "/" + m.den : "");
+        break;
+      case 'mixedB':
+        var m = toMixed(B);
+        outTitle = "B → смешанное";
+        outDetail = fracToString(B) + " = " + (m.whole !== 0 ? (m.whole + (m.num ? " " : "")) : (m.whole === 0 && m.num === 0 ? "0" : "")) + (m.num ? m.num + "/" + m.den : "");
+        break;
+      case 'toDecimalA':
+        outTitle = "A → десятичная";
+        outDetail = fracToString(A) + " = " + toDecimal(A, decimals);
+        break;
+      case 'toDecimalB':
+        outTitle = "B → десятичная";
+        outDetail = fracToString(B) + " = " + toDecimal(B, decimals);
+        break;
+      default:
+        throw new Error("Неизвестная операция");
+    }
+
+    // Показать результат на странице
+    el.resultText.innerHTML = "<div><strong>" + outTitle + "</strong></div><div style='margin-top:6px'>" + outDetail + "</div>";
+
+    // Сохранить в историю
+    pushHistory({ title: outTitle, detail: outDetail, time: Date.now() });
+
+  } catch (e) {
+    el.msg.textContent = e.message || String(e);
+  }
+});
+
+// Очистка истории
+el.btnClear.addEventListener('click', function() {
+  if (confirm("Очистить историю операций?")) {
+    localStorage.removeItem(STORAGE_KEY);
+    renderHistory();
+  }
+});
+
+// Инициализация (рендер истории)
+renderHistory();
+
+// Дополнительно: сохраняем форму при изменениях (необязательно)
+function saveFormState() {
+  try {
+    var state = {
+      a_num: el.a_num.value,
+      a_den: el.a_den.value,
+      b_num: el.b_num.value,
+      b_den: el.b_den.value,
+      decimals: el.decimals.value
+    };
+    localStorage.setItem("fractions_service_form_v15", JSON.stringify(state));
+  } catch(e){}
+}
+function loadFormState() {
+  try {
+    var s = localStorage.getItem("fractions_service_form_v15");
+    if (!s) return;
+    var st = JSON.parse(s);
+    if (st.a_num) el.a_num.value = st.a_num;
+    if (st.a_den) el.a_den.value = st.a_den;
+    if (st.b_num) el.b_num.value = st.b_num;
+    if (st.b_den) el.b_den.value = st.b_den;
+    if (st.decimals) el.decimals.value = st.decimals;
+  } catch(e){}
+}
+['change','input'].forEach(function(ev){ document.addEventListener(ev, saveFormState); });
+loadFormState();
+
+</script>
+
+</body>
+</html>

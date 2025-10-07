@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Лабораторная работа 3</title>
+</head>
+<body>
+<script>
+    // Функция для нахождения ближайшей сверху степени числа 2
+    function nextPowerOfTwo(N) {
+        var n = parseInt(N);
+
+        if (isNaN(n) || n < 1) {
+            return null; // если введено не натуральное число
+        }
+
+        var power = 1;
+        var exponent = 0; // показатель степени
+
+        while (power <= n) {
+            power *= 2;
+            exponent++;
+        }
+        return {value: power, exp: exponent}; // возвращаем и число, и степень
+    }
+
+    // Ввод числа с клавиатуры
+    var input = prompt("Введите натуральное число:");
+    var result = nextPowerOfTwo(input);
+
+    if (result === null) {
+        alert("Ошибка: нужно ввести натуральное число!");
+    } else {
+        alert("Ближайшая сверху степень числа 2 для " + input +
+              " = " + result.value + " (2^" + result.exp + ")");
+    }
+</script>
+    <p style="text-align: center;" onclick="location.reload(true);">
+        Ещё раз!
+    </p>
+</body>
+</html>

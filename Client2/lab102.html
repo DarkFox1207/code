@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Задание 2</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    form {
+      margin: 20px 0;
+    }
+
+    .mosaic {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      width: 800px;  /* размер окна мозаики */
+      height: 600px;
+      margin: 0 auto;
+      border: 2px solid #333;
+    }
+
+    .mosaic img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* подгоняет изображение под размер ячейки */
+      display: block;
+    }
+  </style>
+  <script>
+    function loadImage() {
+      let image = document.getElementById("imageSelect").value;
+      let frame = document.getElementById("frameSelect").value;
+      document.getElementById(frame).src = image;
+    }
+  </script>
+</head>
+<body>
+  <h2>Мозаика с подгонкой изображений</h2>
+
+  <form>
+    <label>Выберите часть мозаики:</label>
+    <select id="imageSelect">
+      <option value="pic1.jpg">part1.jpg</option>
+      <option value="pic2.jpg">part2.jpg</option>
+      <option value="pic3.jpg">part3.jpg</option>
+      <option value="pic4.jpg">part4.jpg</option>
+    </select>
+
+    <label>Куда загрузить:</label>
+    <select id="frameSelect">
+      <option value="img1">Ячейка 1</option>
+      <option value="img2">Ячейка 2</option>
+      <option value="img3">Ячейка 3</option>
+      <option value="img4">Ячейка 4</option>
+    </select>
+
+    <input type="button" value="Загрузить" onclick="loadImage()">
+  </form>
+
+  <div class="mosaic">
+    <img id="img1" src="">
+    <img id="img2" src="">
+    <img id="img3" src="">
+    <img id="img4" src="">
+  </div>
+</body>
+</html>

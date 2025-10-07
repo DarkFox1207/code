@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Лабораторная работа 8</title>
+</head>
+<body>
+  <h1>Коэффициент физических способностей F(l)</h1>
+  <p id="result"></p>
+
+  <script>
+    // Запрос даты рождения в формате ДД.ММ.ГГГГ
+    let birthStr = prompt("Введите дату рождения в формате ДД.ММ.ГГГГ:");
+
+    if (birthStr) {
+      // Разбиваем строку по точке
+      let parts = birthStr.split(".");
+      if (parts.length === 3) {
+        let day = parseInt(parts[0], 10);
+        let month = parseInt(parts[1], 10) - 1; // месяцы в JS начинаются с 0
+        let year = parseInt(parts[2], 10);
+
+        let birthDate = new Date(year, month, day);
+
+        if (isNaN(birthDate)) {
+          document.getElementById("result").textContent = "Ошибка: неверный формат даты.";
+        } else {
+          let today = new Date();
+
+          // Количество дней между датами
+          let diffMs = today - birthDate;
+          let l = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+          // Формула F(l) = sin(2*pi*l/23)
+          let F = Math.sin(2 * Math.PI * l / 23);
+
+          document.getElementById("result").innerHTML =
+            "Дата рождения: " + birthDate.toLocaleDateString() + "<br>" +
+            "Сегодня: " + today.toLocaleDateString() + "<br>" +
+            "Дней прошло (l): " + l + "<br>" +
+            "F(l) = " + F.toFixed(6);
+        }
+      } else {
+        document.getElementById("result").textContent = "Ошибка: используйте формат ДД.ММ.ГГГГ.";
+      }
+    } else {
+      document.getElementById("result").textContent = "Дата рождения не введена.";
+    }
+  </script>
+</body>
+</html>

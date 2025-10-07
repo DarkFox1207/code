@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Лабораторная работа 5</title>
+</head>
+<body>
+<script>
+  // Исходный массив объектов
+  var users = [
+    {id: 1, name: "Иван", surname: "Иванов"},
+    {id: 2, name: "Пётр", surname: "Петров"},
+    {id: 3, name: "Сидор", surname: "Сидоров"}
+  ];
+
+  // Функция для преобразования массива
+  function makeUsersWithFullName(arr) {
+    return arr.map(function(user) {
+      return {
+        id: user.id,
+        fullName: user.name + " " + user.surname
+      };
+    });
+  }
+
+  // Тестирование
+  var newUsers = makeUsersWithFullName(users);
+
+  console.log("Исходный массив:");
+  console.log(users);
+  console.log("Новый массив:");
+  console.log(newUsers);
+
+  // Вывод результата на страницу
+  document.write("<h3>Исходный массив:</h3>");
+  users.forEach(function(u) {
+    document.write(u.id + ": " + u.name + " " + u.surname + "<br>");
+  });
+
+  document.write("<h3>Новый массив:</h3>");
+  newUsers.forEach(function(u) {
+    document.write(u.id + ": " + u.fullName + "<br>");
+  });
+</script>
+
+<noscript>
+  <p>Включите JavaScript в браузере для работы приложения!</p>
+</noscript>
+</body>
+</html>
